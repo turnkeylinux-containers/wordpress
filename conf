@@ -1,0 +1,61 @@
+#!/bin/bash
+set -uexo pipefail
+
+deps=(
+    php-mysql
+    php-curl
+    unzip
+    libjs-cropper
+    libjs-jquery
+    libjs-prototype
+    libjs-scriptaculous
+    libphp-phpmailer
+    libphp-snoopy
+    php-gd
+    tinymce
+)
+
+apt-get install "${deps[@]}"
+
+# install composer
+URL='https://getcomposer.org/installer'
+SIG="$(curl -sL https://composer.github.io/installer.sig)"
+
+curl -o composer-setup.php "${URL}"
+[[ "${SIG}" = "$(sha384sum composer-setup.php | cut -d' ' -f1)" ]] || {
+    echo 'Composer signature verification failed.'
+    exit 1
+}
+
+php composer-setup.php --quiet --install-dir=/usr/local/bin --filename=composer
+chmod +x /usr/local/bin/composer
+rm composer-setup.php
+
+mkdir -p /usr/local/share/composer
+chown -R www-data:www-data /usr/local/share/composer
+
+export COMPOSER_HOME=/usr/local/share/composer
+
+# install wpcli
+composer global require wp-cli/wp-cli-bundle --no-plugins --no-scripts
+
+ln -s /usr/local/share/composer/vendor/wp-cli/wp-cli/bin/wp /usr/local/bin/wp
+chmod +x /usr/local/bin/wp
+
+gs () {
+    gosu www-data "$@"
+}
+
+# smoke test
+gs wp --info
+# install wordpress
+mkdir -p "${SRCDIR}/wordpress"
+chown -R www-data:www-data "${SRCDIR}/wordpress"
+
+gs wp core download --version="${PRODUCT_VERSION}" --path="${SRCDIR}/wordpress"
+
+tar czf /tmp/wordpress.tar.gz --owner www-data --group www-data -C "${SRCDIR}/wordpress" .
+rm -rf "${SRCDIR}/wordpress"
+
+mv /tmp/wordpress.tar.gz "${SRCDIR}"
+apt-get purge wget
