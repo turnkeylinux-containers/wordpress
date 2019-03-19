@@ -1,14 +1,15 @@
 {
-    "build": {
-        "KEEP_USER": "www-data"
-    },
     "meta": {
-        "name": "wordpress",
-        "version": "4.9.8",
+        "build_args": {
+            "PRODUCT_NAME": "wordpress",
+            "PRODUCT_VERSION": "5.1.1",
+            "BASE_IMAGE": "qrntz/php-fpm:7.3",
+            "KEEP_USER": "www-data"
+        },
         "containers": [
             { 
                 "name": "wordpress",
-                "version": "4.9.8",
+                "version": "5.1.1",
                 "mountPoints": [
                     {
                         "sourceVolume": "webroot",
@@ -40,13 +41,7 @@
                     "DB_PASS": "turnkey1"
                 },
                 "cpu": 512,
-                "ram": 256,
-                "pre_confs": [
-                    {
-                        "name": "php-fpm",
-                        "version": "7.2"
-                    }
-                ]
+                "ram": 256
             },
             {
                 "name": "nginx",
