@@ -25,8 +25,5 @@ jobs:
           mkdir -p build/overlay/usr/local/sbin
           docker cp keyhole:/go/src/keyhole/keyhole ./build/overlay/usr/local/sbin/keyhole
           cat /usr/share/tklc/skel/Dockerfile.head Dockerfile.tail > ./build/Dockerfile
-          echo $PRODUCT_NAME
-          echo $PRODUCT_VERSION
-          echo $BUILD_ARGS
           docker build -t qrntz/$PRODUCT_NAME:$PRODUCT_VERSION $BUILD_ARGS build
           docker push qrntz/$PRODUCT_NAME:$PRODUCT_VERSION

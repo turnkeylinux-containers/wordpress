@@ -1,5 +1,2 @@
-RUN echo $PRODUCT_NAME
-RUN echo $PRODUCT_VERSION
-
 EXPOSE 9000
 CMD ["php-fpm"]
