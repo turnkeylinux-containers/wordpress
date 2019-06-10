@@ -2,14 +2,14 @@
     "meta": {
         "build_args": {
             "PRODUCT_NAME": "wordpress",
-            "PRODUCT_VERSION": "5.1.1",
+            "PRODUCT_VERSION": "5.2.1",
             "BASE_IMAGE": "$REPO/php-fpm:7.3",
             "KEEP_USER": "www-data"
         },
         "containers": [
             { 
                 "name": "wordpress",
-                "version": "5.1.1",
+                "version": "5.2.1",
                 "mountPoints": [
                     {
                         "sourceVolume": "webroot",
@@ -45,7 +45,7 @@
             },
             {
                 "name": "nginx",
-                "version": "1.14.0",
+                "version": "1.14.2",
                 "ports": {
                     "80": "tcp",
                     "443": "tcp"
@@ -67,7 +67,7 @@
             },
             {
                 "name": "mariadb",
-                "version": "10.1",
+                "version": "10.3",
                 "mountPoints": [
                     {
                         "sourceVolume": "initdb",
